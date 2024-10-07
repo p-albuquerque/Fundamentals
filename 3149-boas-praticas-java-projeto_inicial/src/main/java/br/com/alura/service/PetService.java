@@ -1,5 +1,6 @@
 package br.com.alura.service;
 
+import br.com.alura.client.ClientHttpConfiguration;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -8,13 +9,16 @@ import com.google.gson.JsonParser;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Scanner;
 
 public class PetService {
+
+    private final ClientHttpConfiguration clientHttpConfiguration;
+
+    public PetService(ClientHttpConfiguration clientHttpConfiguration) {
+        this.clientHttpConfiguration = clientHttpConfiguration;
+    }
 
     public void importarPetsDoAbrigo() throws IOException, InterruptedException {
         System.out.println("Digite o id ou nome do abrigo:");
@@ -49,7 +53,7 @@ public class PetService {
 
             String uri = "http://localhost:8080/abrigos/" + idOuNome + "/pets";
 
-            HttpResponse<String> response = dispararRequisicaoPost(uri, json);
+            HttpResponse<String> response = clientHttpConfiguration.dispararRequisicaoPost(uri, json);
             int statusCode = response.statusCode();
             String responseBody = response.body();
             if (statusCode == 200) {
@@ -70,7 +74,7 @@ public class PetService {
         System.out.println("Digite o id ou nome do abrigo:");
         String idOuNome = new Scanner(System.in).nextLine();
         String uri = "http://localhost:8080/abrigos/" +idOuNome +"/pets";
-        HttpResponse<String> response = dispararRequisicaoGet(uri);
+        HttpResponse<String> response = clientHttpConfiguration.dispararRequisicaoGet(uri);
         int statusCode = response.statusCode();
         if (statusCode == 404 || statusCode == 500) {
             System.out.println("ID ou nome não cadastrado!");
