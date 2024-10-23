@@ -10,6 +10,10 @@ public class Pet {
         this.peso = peso;
     }
 
+    public long getId() {
+        return id;
+    }
+
     public String getTipo() {
         return tipo;
     }
@@ -34,6 +38,7 @@ public class Pet {
         return peso;
     }
 
+    private long id;
     private String tipo;
     private String nome;
     private String raca;
