@@ -10,6 +10,30 @@ public class Pet {
         this.peso = peso;
     }
 
+    public String getTipo() {
+        return tipo;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String getRaca() {
+        return raca;
+    }
+
+    public int getIdade() {
+        return idade;
+    }
+
+    public String getCor() {
+        return cor;
+    }
+
+    public Float getPeso() {
+        return peso;
+    }
+
     private String tipo;
     private String nome;
     private String raca;
