@@ -32,6 +32,19 @@ public class Abrigo {
         return pets;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "\"id\": " + id + "," +
+                "\"nome\": " + "\"" + nome + "\"," +
+                "\"telefone\": " + telefone + "," +
+                "\"email\": " + "\"" + email + "\"";
+    }
+
+
     private long id;
     private String nome;
     private String telefone;
