@@ -3,9 +3,11 @@ package br.com.alura.service;
 import br.com.alura.client.ClientHttpConfiguration;
 import br.com.alura.domain.Abrigo;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.net.http.HttpResponse;
 
@@ -20,32 +22,35 @@ public class AbrigoServiceTest {
     private HttpResponse<String> _response = mock(HttpResponse.class);
     private Abrigo abrigo = new Abrigo("Test", "888888", "test@email.com");
 
+    @BeforeEach
+    public void setUp() throws Exception {
+        when(_client.dispararRequisicaoGet(anyString())).thenReturn(_response);
+    }
+
     @Test
     public void listarAbrigoTest() throws Exception {
         abrigo.setId(0L);
 
-        String expectedAbrigosCadastrados = "Abrigos cadastrados:";
-        String expectedAbrigoInfo = "0 - Test";
+        // Quando existe abrigo
+        _listarAbrigosTest("[{" + abrigo.toString() + "}]", "Abrigos cadastrados:", "0 - Test");
 
-        // Ler conteudo logado atraves do "System.out.println"
+        // Quando nao existe abrigo
+        _listarAbrigosTest("[]", "Nao ha abrigos cadastrados");
+    }
+
+    private void _listarAbrigosTest(String responseBody, String ...expectedMessages) throws IOException, InterruptedException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PrintStream printStream = new PrintStream(baos);
         System.setOut(printStream);
 
-        // mockar retorno requisicao get do _client e o conteudo json da resposta
-        when(_client.dispararRequisicaoGet(anyString())).thenReturn(_response);
-        when(_response.body()).thenReturn("[{" + abrigo.toString() + "}]"); // o toString precisa retornar a string do objeto no padrao JSONObject
+        when(_response.body()).thenReturn(responseBody);
 
-        // Executar metodo alvo do teste
         _abrigoService.listarAbrigo();
 
-        // Obter conteudo logado pelo metodo
-        String[] lines = baos.toString().split(System.lineSeparator());
-        String actualAbrigosCadastrados = lines[0];
-        String actualAbrigoInfo = lines[1];
+        String[] actualMessages = baos.toString().split(System.lineSeparator());
+        for (int i = 0; i < expectedMessages.length; i++) {
+            Assertions.assertEquals(expectedMessages[i], actualMessages[i]);
 
-        // Assertar respostas com resultado esperado
-        Assertions.assertEquals(expectedAbrigosCadastrados, actualAbrigosCadastrados);
-        Assertions.assertEquals(expectedAbrigoInfo, actualAbrigoInfo);
+        }
     }
 }
