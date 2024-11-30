@@ -7,6 +7,7 @@ public class AdopetConsoleApplication {
     public static void main(String[] args) {
         System.out.println("##### BOAS VINDAS AO SISTEMA ADOPET CONSOLE #####");
 
+        CommandExecutor executor = new CommandExecutor();
         try {
             int opcaoEscolhida = 0;
             while (opcaoEscolhida != 5) {
@@ -20,24 +21,20 @@ public class AdopetConsoleApplication {
                 String textoDigitado = new Scanner(System.in).nextLine();
                 opcaoEscolhida = Integer.parseInt(textoDigitado);
 
-                CommandExecutor executor = new CommandExecutor();
+                if (opcaoEscolhida == 5) {
+                    System.out.println("Finalizando o programa...");
+                    return;
+                }
 
-                if (opcaoEscolhida == 1) {
-                    executor.invoker(new ListarAbrigoCommand());
-                } else if (opcaoEscolhida == 2) {
-                    executor.invoker(new CadastrarAbrigoCommand());
-                } else if (opcaoEscolhida == 3) {
-                    executor.invoker(new ListarPetsDoAbrigoCommand());
-                } else if (opcaoEscolhida == 4) {
-                    executor.invoker(new ImportarPetsDoAbrigoCommand());
-                } else if (opcaoEscolhida == 5) {
-                    break;
+                Command command = CommandRegistry.getCommand(opcaoEscolhida);
+
+                if (command != null) {
+                    executor.invoker(command);
                 } else {
                     System.out.println("NÚMERO INVÁLIDO!");
                     opcaoEscolhida = 0;
                 }
             }
-            System.out.println("Finalizando o programa...");
         } catch (Exception e) {
             e.printStackTrace();
         }
