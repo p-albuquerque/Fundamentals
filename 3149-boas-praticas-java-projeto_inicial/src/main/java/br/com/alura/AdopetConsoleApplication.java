@@ -10,7 +10,6 @@ public class AdopetConsoleApplication {
 
     public static void main(String[] args) {
         ClientHttpConfiguration clientHttpConfiguration = new ClientHttpConfiguration();
-        AbrigoService abrigoService = new AbrigoService(clientHttpConfiguration);
         PetService petService = new PetService(clientHttpConfiguration);
 
         System.out.println("##### BOAS VINDAS AO SISTEMA ADOPET CONSOLE #####");
@@ -27,10 +26,12 @@ public class AdopetConsoleApplication {
                 String textoDigitado = new Scanner(System.in).nextLine();
                 opcaoEscolhida = Integer.parseInt(textoDigitado);
 
+                CommandExecutor executor = new CommandExecutor();
+
                 if (opcaoEscolhida == 1) {
-                    abrigoService.listarAbrigo();
+                    executor.invoker(new ListarAbrigoCommand());
                 } else if (opcaoEscolhida == 2) {
-                    abrigoService.cadastrarAbrigo();
+                    executor.invoker(new CadastrarAbrigoCommand());
                 } else if (opcaoEscolhida == 3) {
                     petService.listarPetsDoAbrigo();
                 } else if (opcaoEscolhida == 4) {
